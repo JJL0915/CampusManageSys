@@ -28,6 +28,10 @@ def get_student(db: Session, student_id: int) -> Student | None:
     return db.get(Student, student_id)
 
 
+def list_users(db: Session) -> list[User]:
+    return list(db.scalars(select(User)).all())
+
+
 def list_students(db: Session) -> list[Student]:
     return list(db.scalars(select(Student).options(joinedload(Student.user))).all())
 

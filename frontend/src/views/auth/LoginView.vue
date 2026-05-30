@@ -1,11 +1,15 @@
 <template>
   <main class="login-page">
     <section class="login-visual">
-      <div>
-        <p>在线选课 + 作业管理系统</p>
-        <h1>课程、作业、提交、批改和成绩统计集中处理。</h1>
+      <div class="login-visual-copy">
+        <p class="login-visual-kicker">课程管理 · 作业协同平台</p>
+        <h1>
+          <span>课程、作业与成绩</span>
+          <span>一站式高效管理</span>
+        </h1>
+        <span class="login-visual-line"></span>
+        <p class="login-visual-desc">面向学生、教师与管理员，统一完成课程管理、作业发布、提交批改与成绩查看。</p>
       </div>
-      <p>学生完成选课和提交，教师发布与批改，管理员维护课程和账号。数据统计使用 ECharts 展示提交状态和成绩分布。</p>
     </section>
 
     <section class="panel login-card">
@@ -62,4 +66,3 @@ async function handleLogin() {
   }
 }
 </script>
-

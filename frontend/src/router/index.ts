@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
+const adminAllowedPaths = new Set(['/dashboard', '/courses'])
+const adminBlockedPaths = ['/assignments', '/submissions', '/admin']
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -39,6 +42,13 @@ router.beforeEach((to) => {
   }
   const roles = to.meta.roles as Array<'student' | 'teacher' | 'admin'> | undefined
   if (!auth.hasRole(roles)) {
+    return { path: '/dashboard' }
+  }
+  if (
+    auth.user?.role === 'admin' &&
+    !adminAllowedPaths.has(to.path) &&
+    adminBlockedPaths.some((path) => to.path === path || to.path.startsWith(`${path}/`))
+  ) {
     return { path: '/dashboard' }
   }
   if (to.path === '/login' && auth.isAuthed) {

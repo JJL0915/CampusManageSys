@@ -133,6 +133,20 @@ export interface OverviewStats {
   grade_by_course: Array<{ course: string; average: number; graded_count: number }>
   weekly_schedule: WeeklyScheduleItem[]
   recent_activities: Array<{ id: number; title: string; description: string | null; created_at: string }>
+  role_distribution: Array<{ name: string; value: number }>
+  course_status: Array<{ name: string; value: number }>
+  operation_logs: OperationLogItem[]
+}
+
+export interface OperationLogItem {
+  id: number
+  created_at: string
+  operator: string
+  operator_role: string
+  action: string
+  detail: string | null
+  module: string
+  tone: 'blue' | 'green' | 'orange' | 'violet'
 }
 
 export interface EnrollmentSetting {

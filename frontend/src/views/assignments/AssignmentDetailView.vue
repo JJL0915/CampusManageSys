@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Document, EditPen, Picture } from '@element-plus/icons-vue'
 import { getAssignment } from '../../api/assignments'
@@ -112,6 +112,8 @@ const canSubmit = computed(() => auth.user?.role === 'student' && assignment.val
 const submitButtonText = computed(() => (assignment.value?.submitted ? '修改提交' : '开始提交'))
 
 async function loadData() {
+  assignment.value = null
+  submission.value = null
   assignment.value = await getAssignment(assignmentId.value)
   if (auth.user?.role === 'student') {
     const list = await getSubmissions({ assignment_id: assignmentId.value })
@@ -130,4 +132,11 @@ function formatSize(size: number) {
 }
 
 onMounted(loadData)
+
+watch(
+  () => [assignmentId.value, route.query.notice, route.query.refresh],
+  () => {
+    loadData()
+  }
+)
 </script>

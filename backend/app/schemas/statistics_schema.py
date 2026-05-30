@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class StatCard(BaseModel):
@@ -38,6 +38,17 @@ class RecentActivity(BaseModel):
     created_at: datetime
 
 
+class OperationLogItem(BaseModel):
+    id: int
+    created_at: datetime
+    operator: str
+    operator_role: str
+    action: str
+    detail: str | None
+    module: str
+    tone: str
+
+
 class OverviewStats(BaseModel):
     cards: list[StatCard]
     submission_status: list[NameValue]
@@ -46,3 +57,6 @@ class OverviewStats(BaseModel):
     grade_by_course: list[CourseGradeStat]
     weekly_schedule: list[dict]
     recent_activities: list[RecentActivity]
+    role_distribution: list[NameValue] = Field(default_factory=list)
+    course_status: list[NameValue] = Field(default_factory=list)
+    operation_logs: list[OperationLogItem] = Field(default_factory=list)

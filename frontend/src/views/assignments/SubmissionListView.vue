@@ -15,7 +15,7 @@
     </div>
 
     <div class="table-card">
-      <el-table :data="submissions" v-loading="loading">
+      <el-table :data="submissions" v-loading="loading" :row-class-name="getRowClassName">
         <el-table-column prop="assignment_title" label="作业" min-width="160" />
         <el-table-column prop="course_name" label="课程" width="140" />
         <el-table-column v-if="auth.user?.role !== 'student'" prop="student_name" label="学生" width="120" />
@@ -87,7 +87,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { Document, EditPen, Picture, Refresh } from '@element-plus/icons-vue'
 import { gradeSubmission, getSubmissions } from '../../api/submissions'
 import type { Submission } from '../../api/types'
@@ -95,8 +96,10 @@ import { useAuthStore } from '../../stores/auth'
 import { formatDateTime } from '../../utils/time'
 
 const auth = useAuthStore()
+const route = useRoute()
 const submissions = ref<Submission[]>([])
-const statusFilter = ref<string | undefined>()
+const statusFilter = ref<string | undefined>(typeof route.query.status === 'string' ? route.query.status : undefined)
+const selectedSubmissionId = ref<number | null>(parseSubmissionId(route.query.submission_id))
 const loading = ref(false)
 const gradeDialog = ref(false)
 const gradeTarget = ref<Submission | null>(null)
@@ -115,6 +118,21 @@ async function loadData() {
   } finally {
     loading.value = false
   }
+}
+
+function parseSubmissionId(value: unknown) {
+  const rawValue = Array.isArray(value) ? value[0] : value
+  const id = Number(rawValue)
+  return Number.isFinite(id) && id > 0 ? id : null
+}
+
+function syncRouteQuery() {
+  statusFilter.value = typeof route.query.status === 'string' ? route.query.status : undefined
+  selectedSubmissionId.value = parseSubmissionId(route.query.submission_id)
+}
+
+function getRowClassName({ row }: { row: Submission }) {
+  return selectedSubmissionId.value === row.id ? 'submission-row-highlight' : ''
 }
 
 function openGrade(row: Submission) {
@@ -137,5 +155,16 @@ function formatSize(size: number) {
   return `${Math.ceil(size / 1024)} KB`
 }
 
-onMounted(loadData)
+onMounted(() => {
+  syncRouteQuery()
+  loadData()
+})
+
+watch(
+  () => [route.query.status, route.query.submission_id, route.query.notice, route.query.refresh],
+  () => {
+    syncRouteQuery()
+    loadData()
+  }
+)
 </script>

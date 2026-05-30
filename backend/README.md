@@ -36,7 +36,6 @@ UPLOAD_DIR=backend/uploads
 说明：
 
 - 后端在宿主机运行时，MySQL 主机用 `127.0.0.1`。
-- 如果后端也放进 Docker Compose，MySQL 主机应改为 Compose 服务名，例如 `mysql`。
 - `UPLOAD_DIR` 用于保存作业和提交附件；默认目录会在启动时自动创建。
 
 ## MySQL 初始化
