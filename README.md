@@ -2,7 +2,7 @@
 
 一个前后端分离的课程管理、作业提交与成绩统计平台，面向学生、教师和管理员三类角色。系统提供课程管理、选课排课、作业发布、附件提交、批改评分、数据仪表盘和操作日志等能力。
 
-前端采用 Vue 3 + Element Plus + ECharts，界面使用 iOS 液态玻璃风格；后端采用 FastAPI + SQLAlchemy，数据存储使用 MySQL。
+前端采用 Vue 3 + Element Plus + ECharts；后端采用 FastAPI + SQLAlchemy，数据存储使用 MySQL。
 
 ## 功能特性
 
