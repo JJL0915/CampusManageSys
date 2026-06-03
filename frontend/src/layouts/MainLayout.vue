@@ -25,6 +25,10 @@
           <el-icon><DocumentChecked /></el-icon>
           <span>提交与批改</span>
         </el-menu-item>
+        <el-menu-item v-if="auth.user?.role === 'admin'" index="/admin">
+          <el-icon><User /></el-icon>
+          <span>账号维护</span>
+        </el-menu-item>
       </el-menu>
       <div class="sidebar-user">
         <span>{{ auth.user?.real_name?.slice(0, 1) || 'U' }}</span>
@@ -96,7 +100,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Bell, DataAnalysis, DocumentChecked, Notebook, School, SwitchButton } from '@element-plus/icons-vue'
+import { Bell, DataAnalysis, DocumentChecked, Notebook, School, SwitchButton, User } from '@element-plus/icons-vue'
 import { getAssignments } from '../api/assignments'
 import { getSubmissions } from '../api/submissions'
 import type { Assignment, Submission } from '../api/types'
@@ -121,7 +125,7 @@ const roleText: Record<string, string> = {
   admin: '管理端'
 }
 
-const adminAllowedMenuPaths = new Set(['/dashboard', '/courses'])
+const adminAllowedMenuPaths = new Set(['/dashboard', '/courses', '/admin'])
 const pageTitle = computed(() => titleMap[route.path] || '工作台')
 const roleLabel = computed(() => roleText[auth.user?.role || 'student'])
 const notifications = ref<NotificationItem[]>([])
@@ -178,6 +182,7 @@ function withNavigationRefresh(target: NotificationRoute): NotificationRoute {
 }
 
 function canShowMenu(path: string) {
+  if (path === '/admin') return auth.user?.role === 'admin'
   return auth.user?.role !== 'admin' || adminAllowedMenuPaths.has(path)
 }
 

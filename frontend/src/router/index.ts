@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
-const adminAllowedPaths = new Set(['/dashboard', '/courses'])
-const adminBlockedPaths = ['/assignments', '/submissions', '/admin']
+const adminAllowedPaths = new Set(['/dashboard', '/courses', '/admin'])
+const adminBlockedPaths = ['/assignments', '/submissions']
 
 const router = createRouter({
   history: createWebHistory(),
